@@ -66,19 +66,17 @@ public class Main {
   }
 
   public static void addStudent(Scanner scanner, List<Student> students) {
-    System.out.print("学生の名前を入力してください: ");
-    String name = scanner.nextLine();
+    String name = getValidName(scanner, "追加する学生の名前を入力してください: ");
 
     System.out.print(name + "の点数を入力してください: ");
-    int score = getScore(scanner);
+    int score = getValidScore(scanner);
 
     students.add(new Student(name, score));
     System.out.println(name + "さんを追加しました。");
   }
 
   public static void deleteStudent(Scanner scanner, List<Student> students) {
-    System.out.print("削除する学生の名前を入力してください: ");
-    String name = scanner.nextLine();
+    String name = getValidName(scanner, "削除する学生の名前を入力してください: ");
 
     boolean removed = students.removeIf(student -> student.getName().equals(name));
 
@@ -90,8 +88,7 @@ public class Main {
   }
 
   public static void updateStudent(Scanner scanner, List<Student> students) {
-    System.out.print("点数を更新する学生の名前を入力してください: ");
-    String name = scanner.nextLine();
+    String name = getValidName(scanner, "点数を更新する学生の名前を入力してください: ");
 
     Optional<Student> studentToUpdate = students.stream()
         .filter(s -> s.getName().equals(name))
@@ -100,7 +97,7 @@ public class Main {
     if (studentToUpdate.isPresent()) {
       Student student = studentToUpdate.get();
       System.out.print(name + "の新しい点数を入力してください: ");
-      int newScore = getScore(scanner);
+      int newScore = getValidScore(scanner);
       student.setScore(newScore);
       System.out.println(name + "さんの点数を更新しました。");
     } else {
@@ -124,7 +121,7 @@ public class Main {
 
   public static void displayAllStudents(List<Student> students) {
     if (students.isEmpty()) {
-      System.out.println("学生が登録されていません。");
+      System.out.print("学生が登録されていません。");
       return;
     }
 
@@ -134,14 +131,47 @@ public class Main {
     }
   }
 
-  public static int getScore(Scanner scanner) {
+  /**
+   * 名前の入力とバリデーションを行うメソッド 前後の空白を削除し、空文字列でないことを保証します。
+   *
+   * @param scanner 入力用スキャナー
+   * @param prompt  ユーザーに表示するメッセージ
+   * @return 検証済みの名前
+   */
+
+  public static String getValidName(Scanner scanner, String prompt) {
+    String name;
+    while (true) {
+      System.out.println(prompt);
+      name = scanner.nextLine().trim();
+      if (!name.isEmpty()) {
+        return name;
+      } else {
+        System.out.println("エラー: 名前が空です。再度入力してください。");
+      }
+    }
+  }
+
+  /**
+   * 点数の入力とバリデーションを行うメソッド 0から100の範囲内の整数であることを保証します。
+   *
+   * @param scanner 入力用スキャナー
+   * @return 検証済みの点数
+   */
+
+  public static int getValidScore(Scanner scanner) {
     while (true) {
       try {
         int score = scanner.nextInt();
         scanner.nextLine();
-        return score;
+
+        if (score >= 0 && score <= 100) {
+          return score;
+        } else {
+          System.out.print("エラー: 点数は0から100の間で入力してください。再入力してください: ");
+        }
       } catch (InputMismatchException e) {
-        System.out.print("エラー: 点数は整数で入力してください。再入力してください: ");
+        System.out.print("エラー: 点数は整数で入力してください。再入力してください。: ");
         scanner.next();
       }
     }
