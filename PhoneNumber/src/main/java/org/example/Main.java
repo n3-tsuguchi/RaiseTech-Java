@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 public class Main {
     public static void main(String[] args) {
 
-        String regex = "^0[789]0-?\\d{4}-?\\d{4}$";
+        String regex = "^0[789]0-?\\d{4}-\\d{4}$";
         Pattern pattern = Pattern.compile(regex);
 
         try (Scanner scanner = new Scanner(System.in)) {
