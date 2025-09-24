@@ -27,6 +27,7 @@ out/
 !**/src/test/**/out/
 target/, .idea/
 *.iml, .classpath
+.idea/
 
 ### NetBeans ###
 /nbproject/private/
